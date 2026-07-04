@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>juggernaut - 值班表</title>
+    <link rel="stylesheet" href="/asset/http_cdn.jsdelivr.net_npm_handsontable_styles_handsontable.css" />
+    <link rel="stylesheet" href="/asset/http_cdn.jsdelivr.net_npm_handsontable_styles_ht-theme-main.css" />
+    <style>
+        /* 按钮样式 */
+        #uploadButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 鼠标悬停效果 */
+        #uploadButton:hover {
+            background-color: #0056b3;
+        }
+
+        /* 隐藏文件输入框 */
+        #fileInput {
+            display: none;
+        }
+
+        /* 提示消息样式 */
+        #message {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="handsontable-grid" class="ht-theme-main-dark-auto"></div>
+<button id="uploadButton">上传当月值班表</button> <p style="color: red"> 注意:上传文件名必须为standby.xlsx。</p>
+<input type="file" id="fileInput" style="display: none;" />
+<div id="message"></div>
+
+<script src="/asset/http_cdn.jsdelivr.net_npm_handsontable_dist_handsontable.full.js"></script>
+<script>
+    const element = document.getElementById("handsontable-grid");
+    const uploadButton = document.getElementById("uploadButton");
+    const fileInput = document.getElementById("fileInput");
+    const message = document.getElementById("message");
+
+    // 请求后端接口获取数据
+    fetch("http://127.0.0.1:8080/juggernaut/rota/get_rota")
+        .then(response => response.json())
+        .then(data => {
+            const hot = new Handsontable(element, {
+                data: data,
+                columns: [
+                    { data: "mouth", title: "月份", width: 200 },
+                    { data: "day", title: "日期", width: 200 },
+                    { data: "week", title: "星期", width: 200 },
+                    { data: "stand", title: "值班", width: 200 },
+                    { data: "backupone", title: "备班1", width: 200 },
+                    { data: "backuptwo", title: "备班2", width: 200 },
+                    { data: "restone", title: "调休1", width: 200 },
+                    { data: "resttwo", title: "调休2", width: 200 },
+                    { data: "weekday", title: "工作日", width: 200 },
+                ],
+                rowHeaders: true,
+                navigableHeaders: true,
+                tabNavigation: true,
+                multiColumnSorting: true,
+                headerClassName: "htLeft",
+                licenseKey: "non-commercial-and-evaluation",
+                contextMenu: true,
+                mergeCells: [
+                    { row: 0, col: 0, rowspan: 31, colspan: 1 }
+                ],
+                cells: function(row, col, prop) {
+                    // 为合并后的单元格设置样式
+                    if (row >= 0 && row < 31 && col === 0) {
+                        return {
+                            className: 'htMiddle'
+                        };
+                    }
+                }
+            });
+
+            // 监听afterChange事件
+            hot.addHook('afterChange', function(changes, source) {
+                if (source === 'edit') {
+                    changes.forEach(change => {
+                        const row = change[0];
+                        const header = change[1];
+                        const newValue = change[3];
+                        // 发送数据到后端
+                        sendDataToBackend(row, header, newValue);
+                    });
+                }
+            });
+
+            // 上传按钮点击事件
+            uploadButton.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            // 文件选择事件
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    uploadFileToBackend(file);
+                }
+            });
+        })
+        .catch(error => {
+            console.error("请求数据失败:", error);
+        });
+
+    // 发送数据到后端的函数
+    function sendDataToBackend(row, header, newValue) {
+        const url = "/juggernaut/rota/update_rota";
+        const data = {
+            row: row,
+            header: header,
+            newValue: newValue
+        };
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('数据发送成功');
+                } else {
+                    console.error('数据发送失败');
+                }
+            })
+            .catch(error => {
+                console.error('数据发送失败:', error);
+            });
+    }
+
+    // 上传文件到后端的函数
+    function uploadFileToBackend(file) {
+        const url = "/juggernaut/rota/upload_rota";
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    message.style.display = 'block';
+                    message.textContent = '文件上传成功';
+                    message.style.color = 'green';
+                } else {
+                    message.style.display = 'block';
+                    message.textContent = '文件上传失败';
+                    message.style.color = 'red';
+                }
+            })
+            .catch(error => {
+                message.style.display = 'block';
+                message.textContent = '文件上传失败: ' + error.message;
+                message.style.color = 'red';
+            });
+    }
+</script>
+</body>
+</html>

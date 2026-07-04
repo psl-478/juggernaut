@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" href="/asset/style.css">
+</head>
+
+<body>
+    <div class="content">
+        <div class="left">
+            <img src="/asset/img2.png" class="people p-animtion" alt="people">
+            <img src="/asset/img1.png" class="sphere s-animtion" alt="sphere">
+        </div>
+        <div class="right">
+            <div class="top">
+                <div class="top-item">
+                    <span id="backButton" class="top-text">Home</span>
+                </div>
+                <div class="top-item">
+                    <span class="top-text">Register</span>
+                </div>
+            </div>
+            <div class="form-wrappepr">
+                <h1>Enter Our Rota</h1>
+                <input type="text" class="inputs user" placeholder="Enter username">
+                <input type="password" class="inputs pwd" placeholder="Password">
+                <span class="tips">Recovery Password</span>
+                <button>Sigin In</button>
+                <div class="other-login">
+                    <div class="divider">
+                        <span class="line"></span>
+                        <span class="divider-text">Contributed from ROTC-dev</span>
+                        <span class="line"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+<script>
+    document.querySelector(".people").addEventListener('animationend', function () {
+        this.classList.remove('p-animtion');
+        this.classList.add('p-other-animtion')
+    });
+    document.querySelector(".sphere").addEventListener('animationend', function () {
+        this.classList.remove('s-animtion');
+        this.classList.add('s-other-animtion')
+    });
+
+    // 获取返回按钮
+    var backButton = document.getElementById('backButton');
+
+    // 为返回按钮添加点击事件监听器
+    backButton.addEventListener('click', function () {
+        window.history.back(); // 使用浏览器的历史记录返回上一个页面
+    });
+</script>
+
+</html>

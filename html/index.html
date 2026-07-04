@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>juggernaut</title>
+    <link rel="stylesheet" href="/asset/styleindex.css">
+</head>
+<body>
+<header>
+    <a href="#" class="logo">一个处理转发的多路由服务端<br>A multi-routing server that handles forwarding</a>
+    <ul>
+        <li><a href="/juggernaut/documentation" class="active">下载说明文档</a></li>
+        <li><a href="/juggernaut/contributors">贡献者名单</a></li>
+        <li><a href="/juggernaut/rota">查看值班表</a></li>
+    </ul>
+</header>
+<section>
+    <img src="/asset/stars.png" id="stars">
+    <img src="/asset/moon.png" id="moon">
+    <img src="/asset/mountains_behind.png" id="mountains_behind">
+    <h2 id="text">JUGGERNAUT</h2>
+    <a href="http://43.143.245.135:8080" id="btn">放松一下</a>
+    <img src="/asset/mountains_front.png" id="mountains_front">
+</section>
+<div class="sec" id="sec">
+    <h2>Juggernaut</h2>
+    <p>Contributed from ROTC-DEV<br>Copyright@2026 </p>
+</div>
+<script>
+    let stars = document.getElementById('stars')
+    let moon = document.getElementById('moon')
+    let mountains_behind = document.getElementById('mountains_behind')
+    let text = document.getElementById('text')
+    let btn = document.getElementById('btn')
+    let mountains_front = document.getElementById('mountains_front')
+    let header = document.querySelector('header')
+
+    window.addEventListener('scroll', function () {
+        let value = window.scrollY;
+        stars.style.left = value * 0.25 + 'px'
+        moon.style.top = value * 1.05 + 'px'
+        mountains_behind.style.top = value * 0.5 + 'px'
+        mountains_front.style.top = value * 0 + 'px'
+        text.style.marginRight = value * 4 + 'px'
+        text.style.marginTop = value * 1.5 + 'px'
+        btn.style.marginTop = value * 1.5 + 'px'
+        header.style.top = value * 0.5 + 'px'
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日一言</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .quote-container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .quote {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .author {
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="quote-container">
+    <p class="quote" id="quote">加载中...</p>
+    <p class="author" id="author">— 作者</p>
+</div>
+
+<script>
+    const quotes = [
+        { text: "生活就像海洋，只有意志坚强的人，才能到达彼岸。", author: "马克思" },
+        { text: "生命不在于拥有多长，而在于我们如何使用。许多人活的日子并不多，却活了很长久。", author: "塞涅卡" },
+        { text: "人生最大的快乐是致力于一个自己认为伟大的目标。", author: "萧伯纳" },
+        { text: "人生的价值，并不是用时间，而是用深度去衡量的。", author: "列夫·托尔斯泰" },
+        { text: "生活真象这杯浓酒，不经三番五次的提炼呵，就不会这样可口！", author: "郭小川" }
+    ];
+
+    function getRandomQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        return quotes[randomIndex];
+    }
+
+    function displayQuote() {
+        const { text, author } = getRandomQuote();
+        document.getElementById('quote').textContent = text;
+        document.getElementById('author').textContent = `— ${author}`;
+    }
+
+    displayQuote();
+</script>
+</body>
+</html>
