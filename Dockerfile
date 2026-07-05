@@ -1,5 +1,5 @@
 FROM alpine:latest
-LABEL authors="wangao"
+LABEL authors="psl"
 USER root
 WORKDIR /JUGGERNAUT
 
